@@ -8,7 +8,7 @@ import struct
 from nav_msgs.msg import OccupancyGrid
 from map_msgs.msg import OccupancyGridUpdate
 import numpy as np
-DETECTION_DISTANCE = 0.6
+DETECTION_DISTANCE = 0.45
 
 def distanceToTiles(distance):
     n = round(distance/res)
