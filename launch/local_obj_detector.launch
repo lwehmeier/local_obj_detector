@@ -1,0 +1,8 @@
+<!-- Starts up everything needed to run the example listener/talker Python nodes. -->
+
+<launch>
+  <node pkg="local_obj_detector" type="local_obj_detector.py" name="local_obj_detector">
+    <param name="rate" value="1"/>
+  </node>
+
+</launch>
