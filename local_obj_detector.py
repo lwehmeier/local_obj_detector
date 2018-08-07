@@ -30,7 +30,7 @@ def obj_rear(x0, y0, grid):
 def raytrace(x0, y0, x,y,grid):
     for i in range(min(x, x+x0), max(x, x+x0)):
         for j in range(min(y0+y, y), max(y0+y, y)):
-            if grid[i,j] < 50 and grid[i,j] != -1:
+            if grid[i,j] > 50:
                 return True
     return False
 def callbackCM(costmap):
