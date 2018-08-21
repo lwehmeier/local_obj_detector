@@ -8,7 +8,7 @@ import struct
 from nav_msgs.msg import OccupancyGrid
 from map_msgs.msg import OccupancyGridUpdate
 import numpy as np
-DETECTION_DISTANCE = 0.45
+DETECTION_DISTANCE = 0.51
 
 def distanceToTiles(distance):
     n = round(distance/res)
@@ -16,21 +16,27 @@ def distanceToTiles(distance):
 
 def obj_left(x0, y0, grid):
     x = distanceToTiles(DETECTION_DISTANCE)
-    return raytrace(x0, y0, x, 0, grid)
+    return raytrace(x0, y0, x, 1, grid)
 def obj_right(x0, y0, grid):
     x = distanceToTiles(DETECTION_DISTANCE)
-    return raytrace(x0, y0, -x, 0, grid)
+    return raytrace(x0, y0, -x, 1, grid)
 def obj_front(x0, y0, grid):
     y = distanceToTiles(DETECTION_DISTANCE)
-    return raytrace(x0, y0, 0, y, grid)
+    return raytrace(x0, y0, 1, y, grid)
 def obj_rear(x0, y0, grid):
     y = distanceToTiles(DETECTION_DISTANCE)
-    return raytrace(x0, y0, 0, -y, grid)
+    return raytrace(x0, y0, 1, -y, grid)
 
 def raytrace(x0, y0, x,y,grid):
-    for i in range(min(x, x+x0), max(x, x+x0)):
-        for j in range(min(y0+y, y), max(y0+y, y)):
-            if grid[i,j] > 50:
+#    print("x0, y0, x,y")
+#    print(x0)
+#    print(y0)
+#    print(x)
+#    print(y)
+    for i in range(min(x0, x0+x), max(x0, x0+x)):
+        for j in range(min(y0+y, y0), max(y0+y, y0)):
+            if grid[i,j] > 15:
+#                print("detected")
                 return True
     return False
 def callbackCM(costmap):
@@ -51,11 +57,13 @@ def callbackUpdate(costmap_u):
     if cmap is None:
         print("waiting for initial costmap")
         return
-    if costmap_u.x != 0 or costmap_u.y != 0:
-        print("cannot handle costmap update")
-        return
+    #if costmap_u.x != 0 or costmap_u.y != 0:
+    #    print("cannot handle costmap update")
+    #    return
     global cmap
     cmap.data = costmap_u.data
+    cmap.info.width = costmap_u.width
+    cmap.info.height = costmap_u.height
     callbackCM(cmap)
 
 def grid2matrix(occupancy_grid):
@@ -65,6 +73,7 @@ def grid2matrix(occupancy_grid):
     height = occupancy_grid.info.height
     data = occupancy_grid.data
     matrix = []
+    print((width, height))
     for x in range(0,width):
         matrix.append([])
         for y in range(0,height):
